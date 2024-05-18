@@ -1,0 +1,24 @@
+{
+	"name": "api-derby-france",
+	"version": "0.0.0",
+	"type": "module",
+	"private": true,
+	"scripts": {
+		"gen:club": "node generators/club.gen.mjs",
+		"gen:all": "npm run gen:club",
+		"deploy": "npm run install:all && npm run gen:club && wrangler deploy",
+		"dev": "wrangler dev",
+		"start": "wrangler dev",
+		"test": "vitest"
+	},
+	"devDependencies": {
+		"@cloudflare/vitest-pool-workers": "^0.1.0",
+		"vitest": "1.3.0",
+		"wrangler": "^3.0.0"
+	},
+	"dependencies": {
+		"adm-zip": "^0.5.12",
+		"iconv-lite": "^0.6.3",
+		"validator": "^13.12.0"
+	}
+}

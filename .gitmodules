@@ -1,0 +1,3 @@
+[submodule "src/france-roller-derby-json"]
+	path = src/france-roller-derby-json
+	url = https://github.com/kazerlelutin/france-roller-derby-json
