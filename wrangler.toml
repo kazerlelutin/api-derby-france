@@ -1,5 +1,5 @@
 #:schema node_modules/wrangler/config-schema.json
-name = "derby-club-france"
+name = "api-derby-france"
 main = "api/router.js"
 compatibility_date = "2024-05-12"
 compatibility_flags = ["nodejs_compat"]

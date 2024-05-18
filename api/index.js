@@ -10,9 +10,9 @@ export function home() {
           <p>Use the following endpoints to access club information:</p>
           <ul>
             <li><a href="/clubs">/clubs</a></li>
-            <li><a href="/clubs?search=some_term">/clubs?search=some_term</a></li>
-            <li><a href="/clubs?name=some_name">/clubs?name=some_name</a></li>
-            <li><a href="/clubs?id=some_id">/clubs?id=some_id</a></li>
+            <li><a href="/clubs/search/rouen">/clubs/search/rouen</a></li>
+            <li><a href="/clubs/name/arrd">/clubs/name/arrd</a></li>
+            <li><a href="/clubs/id/W052003960">/clubs/id/W052003960</a></li>
           </ul>
         </body>
         </html>`,

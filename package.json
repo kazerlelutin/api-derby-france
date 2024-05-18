@@ -6,7 +6,7 @@
 	"scripts": {
 		"gen:club": "node generators/club.gen.mjs",
 		"gen:all": "npm run gen:club",
-		"deploy": "npm run install:all && npm run gen:club && wrangler deploy",
+		"deploy": "npm run gen:all && wrangler deploy",
 		"dev": "wrangler dev",
 		"start": "wrangler dev",
 		"test": "vitest"
