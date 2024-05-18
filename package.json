@@ -5,7 +5,8 @@
 	"private": true,
 	"scripts": {
 		"gen:club": "node generators/club.gen.mjs",
-		"gen:all": "npm run gen:club",
+		"gen:rules": "node generators/rules.gen.mjs",
+		"gen:all": "npm run gen:club && npm run gen:rules",
 		"deploy": "npm run gen:all && wrangler deploy",
 		"dev": "wrangler dev",
 		"start": "wrangler dev",
@@ -18,7 +19,9 @@
 	},
 	"dependencies": {
 		"adm-zip": "^0.5.12",
+		"fastest-levenshtein": "^1.0.16",
 		"iconv-lite": "^0.6.3",
+		"pdf-parse": "^1.1.1",
 		"validator": "^13.12.0"
 	}
 }

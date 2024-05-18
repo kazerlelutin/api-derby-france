@@ -2,7 +2,7 @@ import AdmZip from 'adm-zip';
 import iconv from 'iconv-lite';
 import { existsSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
-import { CLUB_FOLDER, DATA_FOLDER, TEMP_FOLDER } from './constants.mjs';
+import { CLUB_FILE, DATA_FOLDER, TEMP_FOLDER } from './constants.mjs';
 
 const BASE_URL = 'https://media.interieur.gouv.fr/rna/rna_waldec_[DATE].zip';
 
@@ -52,8 +52,8 @@ async function clubGen() {
 	const isDataDirExist = existsSync(path.join(process.cwd(), DATA_FOLDER));
 	if (!isDataDirExist) mkdirSync(path.join(process.cwd(), DATA_FOLDER));
 
-	const isClubFileExist = existsSync(path.join(process.cwd(), CLUB_FOLDER));
-	if (!isClubFileExist) writeFileSync(path.join(process.cwd(), CLUB_FOLDER), '[]');
+	const isClubFileExist = existsSync(path.join(process.cwd(), CLUB_FILE));
+	if (!isClubFileExist) writeFileSync(path.join(process.cwd(), CLUB_FILE), '[]');
 
 	const clubs = [];
 
@@ -154,7 +154,7 @@ async function clubGen() {
 	}
 
 	console.log('Sauvegarde des données...');
-	writeFileSync(path.join(process.cwd(), CLUB_FOLDER), JSON.stringify(clubs, null, 2));
+	writeFileSync(path.join(process.cwd(), CLUB_FILE), JSON.stringify(clubs, null, 2));
 
 	console.log('Suppression du dossier temporaire...');
 	rmSync(TEMP_FOLDER, { recursive: true, force: true });
