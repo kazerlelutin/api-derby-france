@@ -1,6 +1,6 @@
-import clubs from '../data/clubs.json';
+import clubs from '../../data/clubs.json';
 
-export async function byId(_req, id) {
+export async function clubById(_req, id) {
 	console.log('byId', id);
 	const result = clubs.find((club) => club?.id?.toLocaleLowerCase() === id.toLowerCase());
 	const status = result ? 200 : 404;

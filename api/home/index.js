@@ -25,9 +25,24 @@ const endpoints = [
 		href: '/rules',
 	},
 	{
+		path: '/rules/chapter/:chapter',
+		description: 'Recherche de règles par chapitre',
+		href: '/rules/chapter/2',
+	},
+	{
+		path: '/rules/search/:search',
+		description: 'Recherche de règles',
+		href: '/rules/search/temps mort',
+	},
+	{
 		path: '/glossary',
 		description: 'Liste des termes du glossaire',
 		href: '/glossary',
+	},
+	{
+		path: '/glossary/search/:search',
+		description: 'Recherche de termes du glossaire',
+		href: '/glossary/search/assist',
 	},
 ];
 
@@ -52,6 +67,11 @@ export function home() {
 
         </body>
         </html>`,
-		{ headers: { 'content-type': 'text/html' } }
+
+		{
+			headers: {
+				'content-type': 'text/html; charset=utf-8',
+			},
+		}
 	);
 }
