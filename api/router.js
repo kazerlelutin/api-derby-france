@@ -16,32 +16,34 @@ export default {
 
 		const lastPath = validator.unescape(decodeURIComponent(url.pathname.split('/').pop()));
 
-		if (url.pathname === '/') return home();
+		let response;
 
-		if (url.pathname.startsWith('/clubs')) {
+		if (url.pathname === '/') response = home();
+		else if (url.pathname.startsWith('/clubs')) {
 			const restUrl = url.pathname.replace('/clubs', '');
-			if (restUrl.startsWith('/search')) return await clubSearchClub(req, lastPath);
-			if (restUrl.startsWith('/id')) return await clubById(req, lastPath);
-			if (restUrl.startsWith('/name')) return await clubByName(lastPath);
-
-			return new Response(JSON.stringify(clubs));
-		}
-
-		if (url.pathname.startsWith('/rules')) {
+			if (restUrl.startsWith('/search')) response = await clubSearchClub(req, lastPath);
+			else if (restUrl.startsWith('/id')) response = await clubById(req, lastPath);
+			else if (restUrl.startsWith('/name')) response = await clubByName(lastPath);
+			else response = new Response(JSON.stringify(clubs));
+		} else if (url.pathname.startsWith('/rules')) {
 			const restUrl = url.pathname.replace('/rules', '');
-
-			if (restUrl.startsWith('/search')) return rulesSearch(req, lastPath);
-			if (restUrl.startsWith('/chapter')) return rulesByChapter(req, lastPath);
-
-			return new Response(JSON.stringify(rules));
-		}
-
-		if (url.pathname.startsWith('/glossary')) {
+			if (restUrl.startsWith('/search')) response = rulesSearch(req, lastPath);
+			else if (restUrl.startsWith('/chapter')) response = rulesByChapter(req, lastPath);
+			else response = new Response(JSON.stringify(rules));
+		} else if (url.pathname.startsWith('/glossary')) {
 			const restUrl = url.pathname.replace('/glossary', '');
-
-			if (restUrl.startsWith('/search')) return await glossarySearch(req, lastPath);
-			return new Response(JSON.stringify(glossary));
+			if (restUrl.startsWith('/search')) response = await glossarySearch(req, lastPath);
+			else response = new Response(JSON.stringify(glossary));
+		} else {
+			response = new Response('Not found', { status: 404 });
 		}
-		return new Response('Not found', { status: 404 });
+
+		// Apply CORS headers
+		response.headers.set('Access-Control-Allow-Origin', '*');
+		response.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+		response.headers.set('Access-Control-Allow-Headers', 'Content-Type');
+		response.headers.set('Access-Control-Max-Age', '86400'); // Cache preflight options for 1 day
+
+		return response;
 	},
 };
