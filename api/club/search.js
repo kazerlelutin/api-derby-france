@@ -32,9 +32,8 @@ export async function clubSearchClub(_req, search) {
 					if (averageDistance < 2) return true;
 					return false;
 				})
-				.sort((a, b) => {
-					a.titre.localeCompare(b.titre);
-				})
+				.filter((club) => !!club.titre || !!club.titre_court)
+				.sort((a, b) => b.titre.localeCompare(a.titre))
 		)
 	);
 }
