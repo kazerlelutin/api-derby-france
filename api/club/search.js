@@ -33,7 +33,11 @@ export async function clubSearchClub(_req, search) {
 					return false;
 				})
 				.filter((club) => !!club.titre || !!club.titre_court)
-				.sort((a, b) => b.titre.localeCompare(a.titre))
+				.sort((a, b) => {
+					const aTitle = a.titre || a.titre_court;
+					const bTitle = b.titre || b.titre_court;
+					return aTitle.localeCompare(bTitle);
+				})
 		)
 	);
 }
