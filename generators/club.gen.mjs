@@ -42,7 +42,7 @@ async function clubGen() {
 	console.log('Création du dossier temporaire...');
 	const isExist = existsSync(path.join(process.cwd(), TEMP_FOLDER));
 	if (isExist) rmSync(TEMP_FOLDER, { recursive: true, force: true });
-	if (!isExist) mkdirSync(path.join(process.cwd(), TEMP_FOLDER));
+	mkdirSync(path.join(process.cwd(), TEMP_FOLDER));
 	console.log('Récupération du fichier ZIP et extraction...');
 	await downloadAndExtractZip(url);
 

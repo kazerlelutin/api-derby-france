@@ -27,11 +27,13 @@ export default {
 			else
 				response = new Response(
 					JSON.stringify(
-						clubs.sort((a, b) => {
-							const aTitle = a.titre || a.titre_court;
-							const bTitle = b.titre || b.titre_court;
-							return aTitle.localeCompare(bTitle);
-						})
+						clubs
+							.filter((club) => !!club.titre || !!club.titre_court)
+							.sort((a, b) => {
+								const aTitle = a?.titre || a?.titre_court;
+								const bTitle = b?.titre || b?.titre_court;
+								return aTitle.localeCompare(bTitle);
+							})
 					)
 				);
 		} else if (url.pathname.startsWith('/rules')) {
