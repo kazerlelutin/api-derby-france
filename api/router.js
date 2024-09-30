@@ -24,7 +24,16 @@ export default {
 			if (restUrl.startsWith('/search')) response = await clubSearchClub(req, lastPath);
 			else if (restUrl.startsWith('/id')) response = await clubById(req, lastPath);
 			else if (restUrl.startsWith('/name')) response = await clubByName(lastPath);
-			else response = new Response(JSON.stringify(clubs));
+			else
+				response = new Response(
+					JSON.stringify(
+						clubs.sort((a, b) => {
+							const aTitle = a.titre || a.titre_court;
+							const bTitle = b.titre || b.titre_court;
+							return aTitle.localeCompare(bTitle);
+						})
+					)
+				);
 		} else if (url.pathname.startsWith('/rules')) {
 			const restUrl = url.pathname.replace('/rules', '');
 			if (restUrl.startsWith('/search')) response = rulesSearch(req, lastPath);
