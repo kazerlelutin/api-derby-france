@@ -35,14 +35,17 @@ async function processRulesFile() {
 
 		const lines = data.split('\n');
 
-		const ParamMatchIdx = lines.findIndex((line) => line.includes('1. Par'));
-		const appendiceIdx = lines.findIndex((line) => line.includes('Appendice'));
-		const glossaryIdx = lines.findIndex((line) => line.includes('Glossaire'));
-		const situationIdx = lines.findIndex((line, index) => index > glossaryIdx && line.includes('Livret de mises en'));
+		const resumeIndex = lines.findIndex((line) => line.trim().replace(/\s+/g, ' ') === 'Résumé');
+
+		const ParamMatchIdx = lines.findIndex((line, index) => index > resumeIndex && line.includes('1.') && line.includes('Paramètres'));
+		const appendiceIdx = lines.findIndex((line, index) => index > resumeIndex && line.includes('Appendice'));
+		const glossaryIdx = lines.findIndex((line, index) => index > resumeIndex && line.includes('Glossaire'));
+		const situationIdx = lines.findIndex((line, index) => index > glossaryIdx && line.includes('Livret') && line.includes('Situation'));
 
 		const filter = (line) => {
 			const cleanLine = line
 				.replace(/[\u200B-\u200D\uFEFF]/g, '')
+
 				.trim()
 				.toLocaleLowerCase();
 			if (cleanLine.startsWith('Table des matières')) return false;
@@ -56,12 +59,15 @@ async function processRulesFile() {
 		lines
 			.filter(filter)
 			.slice(ParamMatchIdx, appendiceIdx)
-			.forEach((line) => {
+			.forEach((line_) => {
+				const line = line_.trim().replace(/\s+/g, ' ');
+
 				const firstChar = line.charAt(0);
 				const secondChar = line.charAt(1);
 
 				// Extract the rules
 				const chapterArr = [];
+
 				if (parseInt(firstChar) > 0 && isNaN(parseInt(secondChar)) && !line.includes(')')) {
 					const splitLineByPoint = line.split('.');
 					splitLineByPoint.forEach((item) => {
@@ -107,13 +113,16 @@ async function processRulesFile() {
 			.forEach((line) => {
 				// TITLE
 				if (line.length < 55 && !line.includes('.')) {
-					glossary.push({ title: line.trim(), description: '' });
+					glossary.push({ title: line.trim().replace(/\s+/g, ' '), description: '' });
 					currentGlossaryIndex++;
 					description = '';
 					return;
 				} else {
-					description += line.trim() + ' ';
-					glossary[currentGlossaryIndex - 1].description = description;
+					description += line.trim().replace(/\s+/g, ' ') + ' ';
+
+					if (glossary[currentGlossaryIndex - 1]) {
+						glossary[currentGlossaryIndex - 1].description = description;
+					}
 				}
 			});
 
@@ -135,6 +144,7 @@ async function processRulesFile() {
 
 async function genRules() {
 	const url = 'https://static.wftda.com/rules/wftda-rules-french.pdf';
+
 	const tempDir = path.resolve(TEMP_FOLDER);
 
 	try {
