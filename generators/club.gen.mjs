@@ -64,7 +64,7 @@ async function clubGen() {
 		const content = iconv.decode(readFileSync(filePath), 'latin1');
 		content
 			.split('\n')
-			.filter((line) => /roller/i.test(line) && /derby/i.test(line))
+			.filter((line) => (/roller/i.test(line) && /derby/i.test(line)) || /roller|skate/i.test(line))
 			.forEach((line) => {
 				const [
 					id,
