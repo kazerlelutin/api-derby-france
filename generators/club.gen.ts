@@ -41,11 +41,19 @@ async function downloadAndExtractZip(url: string) {
 				zip.extractEntryTo(entry.entryName, TEMP_FOLDER, false, true);
 				extractedCount++;
 				console.log(`Extrait: ${entry.entryName}`);
+
+				// Pause après chaque extraction pour réduire la charge
+				console.log('⏸️  Pause de 300ms après extraction...');
+				await new Promise(resolve => setTimeout(resolve, 300));
 			}
 		}
 
 		console.log(`Extraction terminée: ${extractedCount} fichiers CSV`);
 		rmSync(zipPath);
+
+		// Pause après extraction pour laisser le système se stabiliser
+		console.log('⏸️  Pause de 2 secondes après extraction...');
+		await new Promise(resolve => setTimeout(resolve, 2000));
 	} catch (error) {
 		console.error('Failed to download or extract the ZIP file:', error);
 		throw error;
@@ -83,6 +91,12 @@ async function clubGen() {
 		const filePath = pathFolder + '/' + file.name;
 		console.log(`Lecture de ${file.name}...`);
 
+		// Pause entre chaque fichier pour réduire la charge
+		if (files.indexOf(file) > 0) {
+			console.log('⏸️  Pause de 1 seconde entre les fichiers...');
+			await new Promise(resolve => setTimeout(resolve, 1000));
+		}
+
 		// Lecture par chunks pour économiser la mémoire
 		const content = iconv.decode(readFileSync(filePath), 'latin1');
 		const lines = content.split('\n');
@@ -95,100 +109,115 @@ async function clubGen() {
 
 		console.log(`Fichier ${file.name}: ${lines.length} lignes totales, ${relevantLines.length} lignes pertinentes`);
 
-		relevantLines.forEach((line) => {
-			processedLines++;
-			if (processedLines % 100 === 0) {
-				console.log(`Traitement: ${processedLines} clubs traités...`);
-			}
+		// Traitement par lots avec pauses
+		const batchSize = 50; // Traiter par lots de 50 clubs
+		for (let i = 0; i < relevantLines.length; i += batchSize) {
+			const batch = relevantLines.slice(i, i + batchSize);
 
-			const [
-				id,
-				id_ex,
-				siret,
-				rup_mi,
-				gestion,
-				date_creat,
-				date_decla,
-				date_publi,
-				date_disso,
-				nature,
-				groupement,
-				titre,
-				titre_court,
-				objet,
-				objet_social1,
-				objet_social2,
-				adrs_complement,
-				adrs_numvoie,
-				adrs_repetition,
-				adrs_typevoie,
-				adrs_libvoie,
-				adrs_distrib,
-				adrs_codeinsee,
-				adrs_codepostal,
-				adrs_libcommune,
-				adrg_declarant,
-				adrg_complemid,
-				adrg_complemgeo,
-				adrg_libvoie,
-				adrg_distrib,
-				adrg_codepostal,
-				adrg_achemine,
-				adrg_pays,
-				dir_civilite,
-				siteweb,
-				publiweb,
-				observation,
-				position,
-				maj_time,
-			] = line.replace(/"/g, '').split(';');
+			batch.forEach((line) => {
+				processedLines++;
+				if (processedLines % 100 === 0) {
+					console.log(`Traitement: ${processedLines} clubs traités...`);
+				}
 
-			clubs.push({
-				id: id || '',
-				id_ex: id_ex || '',
-				siret: siret || '',
-				rup_mi: rup_mi || '',
-				gestion: gestion || '',
-				date_creat: date_creat || '',
-				date_decla: date_decla || '',
-				date_publi: date_publi || '',
-				date_disso: date_disso || '',
-				nature: nature || '',
-				groupement: groupement || '',
-				titre: titre || '',
-				titre_court: titre_court || '',
-				objet: objet || '',
-				objet_social1: objet_social1 || '',
-				objet_social2: objet_social2 || '',
-				adrs_complement: adrs_complement || '',
-				adrs_numvoie: adrs_numvoie || '',
-				adrs_repetition: adrs_repetition || '',
-				adrs_typevoie: adrs_typevoie || '',
-				adrs_libvoie: adrs_libvoie || '',
-				adrs_distrib: adrs_distrib || '',
-				adrs_codeinsee: adrs_codeinsee || '',
-				adrs_codepostal: adrs_codepostal || '',
-				adrs_libcommune: adrs_libcommune || '',
-				adrg_declarant: adrg_declarant || '',
-				adrg_complemid: adrg_complemid || '',
-				adrg_complemgeo: adrg_complemgeo || '',
-				adrg_libvoie: adrg_libvoie || '',
-				adrg_distrib: adrg_distrib || '',
-				adrg_codepostal: adrg_codepostal || '',
-				adrg_achemine: adrg_achemine || '',
-				adrg_pays: adrg_pays || '',
-				dir_civilite: dir_civilite || '',
-				siteweb: siteweb || '',
-				publiweb: publiweb || '',
-				observation: observation || '',
-				position: position || '',
-				maj_time: maj_time || '',
-				api_updated_at: new Date().toISOString(),
+				const [
+					id,
+					id_ex,
+					siret,
+					rup_mi,
+					gestion,
+					date_creat,
+					date_decla,
+					date_publi,
+					date_disso,
+					nature,
+					groupement,
+					titre,
+					titre_court,
+					objet,
+					objet_social1,
+					objet_social2,
+					adrs_complement,
+					adrs_numvoie,
+					adrs_repetition,
+					adrs_typevoie,
+					adrs_libvoie,
+					adrs_distrib,
+					adrs_codeinsee,
+					adrs_codepostal,
+					adrs_libcommune,
+					adrg_declarant,
+					adrg_complemid,
+					adrg_complemgeo,
+					adrg_libvoie,
+					adrg_distrib,
+					adrg_codepostal,
+					adrg_achemine,
+					adrg_pays,
+					dir_civilite,
+					siteweb,
+					publiweb,
+					observation,
+					position,
+					maj_time,
+				] = line.replace(/"/g, '').split(';');
+
+				clubs.push({
+					id: id || '',
+					id_ex: id_ex || '',
+					siret: siret || '',
+					rup_mi: rup_mi || '',
+					gestion: gestion || '',
+					date_creat: date_creat || '',
+					date_decla: date_decla || '',
+					date_publi: date_publi || '',
+					date_disso: date_disso || '',
+					nature: nature || '',
+					groupement: groupement || '',
+					titre: titre || '',
+					titre_court: titre_court || '',
+					objet: objet || '',
+					objet_social1: objet_social1 || '',
+					objet_social2: objet_social2 || '',
+					adrs_complement: adrs_complement || '',
+					adrs_numvoie: adrs_numvoie || '',
+					adrs_repetition: adrs_repetition || '',
+					adrs_typevoie: adrs_typevoie || '',
+					adrs_libvoie: adrs_libvoie || '',
+					adrs_distrib: adrs_distrib || '',
+					adrs_codeinsee: adrs_codeinsee || '',
+					adrs_codepostal: adrs_codepostal || '',
+					adrs_libcommune: adrs_libcommune || '',
+					adrg_declarant: adrg_declarant || '',
+					adrg_complemid: adrg_complemid || '',
+					adrg_complemgeo: adrg_complemgeo || '',
+					adrg_libvoie: adrg_libvoie || '',
+					adrg_distrib: adrg_distrib || '',
+					adrg_codepostal: adrg_codepostal || '',
+					adrg_achemine: adrg_achemine || '',
+					adrg_pays: adrg_pays || '',
+					dir_civilite: dir_civilite || '',
+					siteweb: siteweb || '',
+					publiweb: publiweb || '',
+					observation: observation || '',
+					position: position || '',
+					maj_time: maj_time || '',
+					api_updated_at: new Date().toISOString(),
+				});
 			});
-		});
+
+			// Pause entre les lots pour réduire la charge
+			if (i + batchSize < relevantLines.length) {
+				console.log('⏸️  Pause de 500ms entre les lots...');
+				await new Promise(resolve => setTimeout(resolve, 500));
+			}
+		}
 	}
 
 	console.log('Sauvegarde des données...');
+	// Pause avant la sauvegarde pour stabiliser le système
+	console.log('⏸️  Pause de 1 seconde avant sauvegarde...');
+	await new Promise(resolve => setTimeout(resolve, 1000));
 	writeFileSync(path.join(process.cwd(), CLUB_FILE), JSON.stringify(clubs, null, 2));
 	console.log('Suppression du dossier temporaire...');
 	rmSync(TEMP_FOLDER, { recursive: true, force: true });
@@ -199,6 +228,7 @@ async function clubGen() {
 	console.log(`   - ${clubs.length} clubs de roller derby trouvés`);
 	console.log(`   - Fichier sauvegardé: ${CLUB_FILE}`);
 	console.log(`   - Taille du fichier: ${(JSON.stringify(clubs).length / 1024 / 1024).toFixed(2)}MB`);
+
 }
 
 clubGen();
