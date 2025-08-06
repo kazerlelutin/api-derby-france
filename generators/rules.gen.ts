@@ -2,15 +2,15 @@ import { GLOSSARY_FILE, RULES_FILE, TEMP_FOLDER, TEMP_RULES_FILE } from './const
 import fs from 'fs/promises';
 import pdf from 'pdf-parse';
 import path from 'path';
-import { Rule, GlossaryItem, RulesData } from './rules.type.ts';
+import type { Rule, GlossaryItem } from './rules.type.ts';
 
-function render_page(pageData) {
+function render_page(pageData: any) {
 	let render_options = {
 		normalizeWhitespace: true,
 		disableCombineTextItems: false,
 	};
 
-	return pageData.getTextContent(render_options).then(function (textContent) {
+	return pageData.getTextContent(render_options).then(function (textContent: any) {
 		let lastY,
 			text = '';
 		for (let item of textContent.items) {
@@ -43,7 +43,7 @@ async function processRulesFile() {
 		const glossaryIdx = lines.findIndex((line, index) => index > resumeIndex && line.includes('Glossaire'));
 		const situationIdx = lines.findIndex((line, index) => index > glossaryIdx && line.includes('Livret') && line.includes('Situation'));
 
-		const filter = (line) => {
+		const filter = (line: string) => {
 			const cleanLine = line
 				.replace(/[\u200B-\u200D\uFEFF]/g, '')
 
@@ -73,7 +73,7 @@ async function processRulesFile() {
 					const splitLineByPoint = line.split('.');
 					splitLineByPoint.forEach((item) => {
 						const cleanItem = item.split(' ')[0];
-						if (parseInt(cleanItem) > 0) chapterArr.push(cleanItem);
+						if (cleanItem && parseInt(cleanItem) > 0) chapterArr.push(cleanItem);
 					});
 
 					let title = line.trim();
@@ -83,13 +83,14 @@ async function processRulesFile() {
 						rules.push({ chapter: chapterArr.join('.'), title, description: '' });
 						currentRulesIndex = rules.length - 1;
 						description = '';
-						//supprimer la prochaine ligne si elle est vide
-						if (lines[lines.indexOf(line) + 1].trim() === '') lines.splice(lines.indexOf(line) + 1, 1);
+
+						if (lines[lines.indexOf(line) + 1]?.trim() === '') lines.splice(lines.indexOf(line) + 1, 1);
 					}
 				} else {
 					description += line.trim() + ' ';
 
 					if (rules[currentRulesIndex]) {
+						//@ts-ignore
 						rules[currentRulesIndex].description = description;
 					}
 				}
@@ -121,7 +122,9 @@ async function processRulesFile() {
 				} else {
 					description += line.trim().replace(/\s+/g, ' ') + ' ';
 
+					//@ts-ignore
 					if (glossary[currentGlossaryIndex - 1]) {
+						//@ts-ignore
 						glossary[currentGlossaryIndex - 1].description = description;
 					}
 				}
@@ -158,7 +161,7 @@ async function genRules() {
 		}
 
 		const buffer = await response.arrayBuffer();
-		const data = await pdf(buffer, {
+		const data = await pdf(buffer as any, {
 			pagerender: render_page,
 		});
 
