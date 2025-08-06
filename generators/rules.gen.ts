@@ -1,7 +1,8 @@
-import { GLOSSARY_FILE, RULES_FILE, TEMP_FOLDER, TEMP_RULES_FILE } from './constants.mjs';
+import { GLOSSARY_FILE, RULES_FILE, TEMP_FOLDER, TEMP_RULES_FILE } from './constants.ts';
 import fs from 'fs/promises';
 import pdf from 'pdf-parse';
 import path from 'path';
+import { Rule, GlossaryItem, RulesData } from './rules.type.ts';
 
 function render_page(pageData) {
 	let render_options = {
@@ -25,8 +26,8 @@ async function processRulesFile() {
 		const data = await fs.readFile(TEMP_RULES_FILE, 'utf-8');
 
 		// === DATA EXTRACTION ===
-		const rules = [];
-		const glossary = [];
+		const rules: Rule[] = [];
+		const glossary: GlossaryItem[] = [];
 
 		// === PARSE DATA ===
 		let currentRulesIndex = 0;
@@ -66,7 +67,7 @@ async function processRulesFile() {
 				const secondChar = line.charAt(1);
 
 				// Extract the rules
-				const chapterArr = [];
+				const chapterArr: string[] = [];
 
 				if (parseInt(firstChar) > 0 && isNaN(parseInt(secondChar)) && !line.includes(')')) {
 					const splitLineByPoint = line.split('.');

@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="fr">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>API DERBY FRANCE</title>
+		<style>
+			* {
+				margin: 0;
+				padding: 0;
+				box-sizing: border-box;
+			}
+
+			body {
+				font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+				background: linear-gradient(135deg, #2a6138 0%, #4c9c83 100%);
+				min-height: 100vh;
+				color: #333;
+			}
+
+			a {
+				color: #ffffff;
+				text-decoration: none;
+			}
+
+			a:hover {
+				color: #764ba2;
+			}
+
+			.container {
+				max-width: 1200px;
+				margin: 0 auto;
+				padding: 2rem;
+			}
+
+			.header {
+				text-align: center;
+				margin-bottom: 3rem;
+				animation: fadeInDown 1s ease-out;
+			}
+
+			.header h1 {
+				font-size: 3rem;
+				color: white;
+				margin-bottom: 1rem;
+				text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+			}
+
+			.header p {
+				font-size: 1.2rem;
+				color: rgba(255, 255, 255, 0.9);
+				max-width: 600px;
+				margin: 0 auto;
+			}
+
+			.kofi-widget {
+				margin: 2rem 0;
+				text-align: center;
+			}
+
+			.endpoints-section {
+				background: white;
+				border-radius: 20px;
+				padding: 2rem;
+				box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+				animation: fadeInUp 1s ease-out 0.3s both;
+			}
+
+			.endpoints-section h2 {
+				color: #2f9184;
+				margin-bottom: 1.5rem;
+				font-size: 2rem;
+				text-align: center;
+			}
+
+			.endpoints-grid {
+				display: grid;
+				grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+				gap: 1.5rem;
+			}
+
+			.endpoint-card {
+				background: #f5f7fa;
+				border-radius: 15px;
+				padding: 1.5rem;
+				transition: all 0.3s ease;
+				border: 2px solid transparent;
+				position: relative;
+				overflow: hidden;
+				border: 1px solid #dde1e7;
+			}
+
+			.endpoint-card:hover {
+				transform: translateY(-5px);
+				box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+				border-color: #667eea;
+			}
+
+			.endpoint-path {
+				font-family: 'Courier New', monospace;
+				background: #667eea;
+				color: white;
+				padding: 0.5rem 1rem;
+				border-radius: 8px;
+				font-size: 0.9rem;
+				margin-bottom: 0.5rem;
+				display: inline-block;
+			}
+
+			.endpoint-description {
+				color: #666;
+				font-size: 1rem;
+				line-height: 1.5;
+			}
+
+			.endpoint-link {
+				color: #667eea;
+				text-decoration: none;
+				font-weight: 600;
+				transition: color 0.3s ease;
+			}
+
+			.endpoint-link:hover {
+				color: #764ba2;
+			}
+
+			.footer {
+				text-align: center;
+				margin-top: 3rem;
+				color: rgba(255, 255, 255, 0.8);
+				animation: fadeIn 1s ease-out 0.6s both;
+			}
+
+			@keyframes fadeInDown {
+				from {
+					opacity: 0;
+					transform: translateY(-30px);
+				}
+				to {
+					opacity: 1;
+					transform: translateY(0);
+				}
+			}
+
+			@keyframes fadeInUp {
+				from {
+					opacity: 0;
+					transform: translateY(30px);
+				}
+				to {
+					opacity: 1;
+					transform: translateY(0);
+				}
+			}
+
+			@keyframes fadeIn {
+				from {
+					opacity: 0;
+				}
+				to {
+					opacity: 1;
+				}
+			}
+
+			@media (max-width: 768px) {
+				.container {
+					padding: 1rem;
+				}
+
+				.header h1 {
+					font-size: 2rem;
+				}
+
+				.endpoints-grid {
+					grid-template-columns: 1fr;
+				}
+
+				.endpoint-card {
+					padding: 1rem;
+				}
+			}
+
+			.roller-icon {
+				font-size: 2rem;
+				margin-right: 1rem;
+				animation: spin 3s linear infinite;
+			}
+
+			@keyframes spin {
+				from {
+					transform: rotate(0deg);
+				}
+				to {
+					transform: rotate(360deg);
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<div class="container">
+			<header class="header">
+				<h1>API DERBY FRANCE</h1>
+				<p>L'API officielle pour accéder aux données des clubs de roller derby en France et aux règles WFTDA</p>
+			</header>
+
+			<div class="kofi-widget">
+				<script type="text/javascript" src="https://storage.ko-fi.com/cdn/widget/Widget_2.js"></script>
+				<script type="text/javascript">
+					kofiwidget2.init('Supportez-moi', '#249c28', 'V7V46KBQ9');
+					kofiwidget2.draw();
+				</script>
+			</div>
+
+			<section class="endpoints-section">
+				<h2>📚 Endpoints Disponibles</h2>
+				<div class="endpoints-grid">
+					<div class="endpoint-card">
+						<div class="endpoint-path">GET /clubs</div>
+						<p class="endpoint-description">Liste complète des clubs de roller derby en France</p>
+						<a href="/clubs" class="endpoint-link">Tester l'endpoint →</a>
+					</div>
+
+					<div class="endpoint-card">
+						<div class="endpoint-path">GET /clubs/search/:search</div>
+						<p class="endpoint-description">Recherche de clubs par terme</p>
+						<a href="/clubs/search/rouen" class="endpoint-link">Exemple: Rouen →</a>
+					</div>
+
+					<div class="endpoint-card">
+						<div class="endpoint-path">GET /clubs/name/:name</div>
+						<p class="endpoint-description">Recherche de clubs par nom exact</p>
+						<a href="/clubs/name/arrd" class="endpoint-link">Exemple: ARRD →</a>
+					</div>
+
+					<div class="endpoint-card">
+						<div class="endpoint-path">GET /clubs/id/:id</div>
+						<p class="endpoint-description">Recherche de clubs par identifiant</p>
+						<a href="/clubs/id/W052003960" class="endpoint-link">Exemple: W052003960 →</a>
+					</div>
+
+					<div class="endpoint-card">
+						<div class="endpoint-path">GET /rules</div>
+						<p class="endpoint-description">Liste complète des règles WFTDA</p>
+						<a href="/rules" class="endpoint-link">Tester l'endpoint →</a>
+					</div>
+
+					<div class="endpoint-card">
+						<div class="endpoint-path">GET /rules/chapter/:chapter</div>
+						<p class="endpoint-description">Recherche de règles par chapitre</p>
+						<a href="/rules/chapter/2" class="endpoint-link">Exemple: Chapitre 2 →</a>
+					</div>
+
+					<div class="endpoint-card">
+						<div class="endpoint-path">GET /rules/search/:search</div>
+						<p class="endpoint-description">Recherche de règles par terme</p>
+						<a href="/rules/search/temps mort" class="endpoint-link">Exemple: Temps mort →</a>
+					</div>
+
+					<div class="endpoint-card">
+						<div class="endpoint-path">GET /glossary</div>
+						<p class="endpoint-description">Liste complète des termes du glossaire</p>
+						<a href="/glossary" class="endpoint-link">Tester l'endpoint →</a>
+					</div>
+
+					<div class="endpoint-card">
+						<div class="endpoint-path">GET /glossary/search/:search</div>
+						<p class="endpoint-description">Recherche de termes du glossaire</p>
+						<a href="/glossary/search/assist" class="endpoint-link">Exemple: Assist →</a>
+					</div>
+				</div>
+			</section>
+
+			<footer class="footer">
+				<p>Propulsé par <a href="https://github.com/kazerlelutin">Kazerlelutin(자유전자) </a></p>
+			</footer>
+		</div>
+
+		<script src="https://storage.ko-fi.com/cdn/scripts/overlay-widget.js"></script>
+	</body>
+</html>

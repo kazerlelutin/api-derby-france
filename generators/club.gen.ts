@@ -1,8 +1,9 @@
-import AdmZip from 'adm-zip';
+const AdmZip = require('adm-zip');
 import iconv from 'iconv-lite';
 import { existsSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
-import { CLUB_FILE, DATA_FOLDER, TEMP_FOLDER } from './constants.mjs';
+import { CLUB_FILE, DATA_FOLDER, TEMP_FOLDER } from './constants.js';
+import type { Club } from './club.type.js';
 
 const BASE_URL = 'https://media.interieur.gouv.fr/rna/rna_waldec_[DATE].zip';
 
@@ -15,7 +16,7 @@ function getUrl(otherMonth = 0) {
 	return BASE_URL.replace('[DATE]', formattedDate);
 }
 
-async function downloadAndExtractZip(url) {
+async function downloadAndExtractZip(url: string) {
 	try {
 		const response = await fetch(url);
 		if (!response.ok) throw new Error(`Failed to fetch ${url}: ${response.statusText}`);
@@ -26,7 +27,7 @@ async function downloadAndExtractZip(url) {
 		const path = TEMP_FOLDER + '/all.zip';
 		writeFileSync(path, buffer, 'binary');
 
-		const zip = new AdmZip(path);
+		const zip = AdmZip(path);
 		zip.extractAllTo(TEMP_FOLDER, true);
 		rmSync(path);
 		console.log('Extraction completed!');
@@ -55,7 +56,7 @@ async function clubGen() {
 	const isClubFileExist = existsSync(path.join(process.cwd(), CLUB_FILE));
 	if (!isClubFileExist) writeFileSync(path.join(process.cwd(), CLUB_FILE), '[]');
 
-	const clubs = [];
+	const clubs: Club[] = [];
 
 	console.log('Lecture des fichiers...');
 	for (const file of files) {
@@ -109,45 +110,45 @@ async function clubGen() {
 				] = line.replace(/"/g, '').split(';');
 
 				clubs.push({
-					id,
-					id_ex,
-					siret,
-					rup_mi,
-					gestion,
-					date_creat,
-					date_decla,
-					date_publi,
-					date_disso,
-					nature,
-					groupement,
-					titre,
-					titre_court,
-					objet,
-					objet_social1,
-					objet_social2,
-					adrs_complement,
-					adrs_numvoie,
-					adrs_repetition,
-					adrs_typevoie,
-					adrs_libvoie,
-					adrs_distrib,
-					adrs_codeinsee,
-					adrs_codepostal,
-					adrs_libcommune,
-					adrg_declarant,
-					adrg_complemid,
-					adrg_complemgeo,
-					adrg_libvoie,
-					adrg_distrib,
-					adrg_codepostal,
-					adrg_achemine,
-					adrg_pays,
-					dir_civilite,
-					siteweb,
-					publiweb,
-					observation,
-					position,
-					maj_time,
+					id: id || '',
+					id_ex: id_ex || '',
+					siret: siret || '',
+					rup_mi: rup_mi || '',
+					gestion: gestion || '',
+					date_creat: date_creat || '',
+					date_decla: date_decla || '',
+					date_publi: date_publi || '',
+					date_disso: date_disso || '',
+					nature: nature || '',
+					groupement: groupement || '',
+					titre: titre || '',
+					titre_court: titre_court || '',
+					objet: objet || '',
+					objet_social1: objet_social1 || '',
+					objet_social2: objet_social2 || '',
+					adrs_complement: adrs_complement || '',
+					adrs_numvoie: adrs_numvoie || '',
+					adrs_repetition: adrs_repetition || '',
+					adrs_typevoie: adrs_typevoie || '',
+					adrs_libvoie: adrs_libvoie || '',
+					adrs_distrib: adrs_distrib || '',
+					adrs_codeinsee: adrs_codeinsee || '',
+					adrs_codepostal: adrs_codepostal || '',
+					adrs_libcommune: adrs_libcommune || '',
+					adrg_declarant: adrg_declarant || '',
+					adrg_complemid: adrg_complemid || '',
+					adrg_complemgeo: adrg_complemgeo || '',
+					adrg_libvoie: adrg_libvoie || '',
+					adrg_distrib: adrg_distrib || '',
+					adrg_codepostal: adrg_codepostal || '',
+					adrg_achemine: adrg_achemine || '',
+					adrg_pays: adrg_pays || '',
+					dir_civilite: dir_civilite || '',
+					siteweb: siteweb || '',
+					publiweb: publiweb || '',
+					observation: observation || '',
+					position: position || '',
+					maj_time: maj_time || '',
 					api_updated_at: new Date().toISOString(),
 				});
 			});
@@ -155,10 +156,8 @@ async function clubGen() {
 
 	console.log('Sauvegarde des données...');
 	writeFileSync(path.join(process.cwd(), CLUB_FILE), JSON.stringify(clubs, null, 2));
-
 	console.log('Suppression du dossier temporaire...');
 	rmSync(TEMP_FOLDER, { recursive: true, force: true });
-	//TODO emoji fire
 	console.log('🔥 Terminé ! le fichier est prêt: ', pathFolder);
 }
 
