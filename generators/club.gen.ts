@@ -10,7 +10,7 @@ const BASE_URL = 'https://media.interieur.gouv.fr/rna/rna_waldec_[DATE].zip';
 function getUrl(otherMonth = 0) {
 	const date = new Date();
 	const year = date.getFullYear();
-	const month = otherMonth || date.getMonth() + 1;
+	let month = otherMonth || date.getMonth();
 	const day = '01';
 	const formattedDate = `${year}${month.toString().padStart(2, '0')}${day.toString().padStart(2, '0')}`;
 	return BASE_URL.replace('[DATE]', formattedDate);
