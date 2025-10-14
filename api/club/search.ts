@@ -45,7 +45,11 @@ export async function clubSearchClub(req: { params: { search: string } }) {
 				const aTitle = a.titre || a.titre_court;
 				const bTitle = b.titre || b.titre_court;
 				return aTitle.localeCompare(bTitle);
-			})
+			}), {
+		headers: {
+			'Access-Control-Allow-Origin': '*',
+		},
+	}
 
 	);
 }

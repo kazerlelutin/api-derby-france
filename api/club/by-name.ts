@@ -14,5 +14,5 @@ export async function clubByName(req: { params: { name: string } }) {
 
 	const status = result ? 200 : 404;
 
-	return Response.json(result || { error: 'Club non trouvé' }, { status });
+	return Response.json(result || { error: 'Club non trouvé' }, { status, headers: { 'Access-Control-Allow-Origin': '*' } });
 }

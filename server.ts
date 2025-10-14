@@ -11,6 +11,7 @@ import { rulesSearch } from "./api/rules/search";
 
 Bun.serve({
 	port: Bun.env.PORT || 3000,
+
 	routes: {
 		"/": home,
 		"/clubs": clubs,
@@ -23,6 +24,7 @@ Bun.serve({
 		"/glossary": glossary,
 		"/glossary/search/:search": glossarySearch,
 	},
+
 });
 
 console.log(`Server is running on http://localhost:${Bun.env.PORT || 3000}`);

@@ -32,6 +32,10 @@ export function glossarySearch(req: { params: { search: string } }) {
 			if (averageDistance < 2) return true;
 			return false;
 		})
-
+		, {
+			headers: {
+				'Access-Control-Allow-Origin': '*',
+			},
+		}
 	);
 }

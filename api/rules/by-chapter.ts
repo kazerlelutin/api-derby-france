@@ -21,5 +21,9 @@ export function rulesByChapter(req: { params: { chapter: string } }) {
 		});
 	}
 
-	return new Response(JSON.stringify(rulesJson.find((rule) => rule?.chapter?.toLocaleLowerCase() === chapterNum.toLowerCase())));
+	return new Response(JSON.stringify(rulesJson.find((rule) => rule?.chapter?.toLocaleLowerCase() === chapterNum.toLowerCase())), {
+		headers: {
+			'Access-Control-Allow-Origin': '*',
+		},
+	});
 }
